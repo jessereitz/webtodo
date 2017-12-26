@@ -13,7 +13,7 @@ old_model = api.create_model(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
 
 exec(old_model, tmp_module.__dict__)
 
-# create and write an migration script. Useful for post-migration checking.
+# create and write a migration script. Useful for post-migration checking.
 script = api.make_update_script_for_model(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, tmp_module.meta, db.metadata)
 open(migration, 'wt').write(script)
 
