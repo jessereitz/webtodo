@@ -4,7 +4,7 @@
 #
 # Models for users and list items
 #
-############################
+#######################################
 
 #####     IMPORTS     #####
 from app import db

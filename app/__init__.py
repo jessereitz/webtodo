@@ -16,13 +16,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 # configuration
-from config import basedir
+from config import Config
 
 ###############################
 #####     FLASK SETUP     #####
 ###############################
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 # flask-login
