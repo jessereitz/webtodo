@@ -18,7 +18,7 @@ Models:
     - password: hashed
     - (email)
 
-  LIST_ITEMS
+  TASKS
     - id: primary
     - ownerid: foreign key
     - title: String (140)
