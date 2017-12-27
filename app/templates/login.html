@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+  <h2>login</h2>
+  <form action="" method="POST" name="login">
+    {{ form.hidden_tag() }}
+    {{ form.username(size=32, placeholder="username") }}<br />
+    {% for error in form.username.errors %}
+      <span style="color: red;">[{{ error }}]</span><br />
+    {% endfor %}
+    {{ form.password(size=32, placeholder="password") }}<br />
+    {% for error in form.password.errors %}
+      <span style="color: red;">[{{ error }}]</span><br />
+    {% endfor %}
+    {{ form.submit() }}
+  </form>
+{% endblock %}
