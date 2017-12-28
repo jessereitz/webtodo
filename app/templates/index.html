@@ -5,21 +5,48 @@
 
   {% if current_user.is_active %}
     <h2>Your List</h2>
-    <div class="task">
-      <div class="taskHeader">
-        <h3>Item 0</h3>
-        <a href="#">Edit</a>
-        <a href="#">Delete</a>
-      </div>
-      <p>This is the note</p>
-    </div>
+    {% if tasks != None %}
     <ul>
-      <li><h3>Item 0</h3>
-          <p>This is a note.</p></li>
-      <li><h3>Item 1</h3></li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-      <li>Item 4</li>
+      {% for task in tasks %}
+        <li class="task">
+          <div class="taskHeader">
+            <h3>{{ task.title }}</h3>
+            <a href="#">Mark Complete</a>
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+          </div>
+          {% if task.note != None %}
+            <p>{{ task.note }}</p>
+          {% endif %}
+        </li>
+      {% endfor %}
+
+    </ul>
+
+    {% endif %}
+    <ul>
+      <li class="task">
+          <div class="taskHeader">
+            <h3>Item 0</h3>
+            <i>not complete</i>
+            <a href="#">Mark Complete</a>
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+          </div>
+          <p>This is the note</p>
+      </li>
+
+      <li class="task">
+          <div class="taskHeader">
+            <h3>Item 0</h3>
+            <i>complete</i>
+            <a href="#">Mark Incomplete</a>
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+          </div>
+          <p>This is the note</p>
+      </li>
+
     </ul>
   {% else %}
     <p>Welcome to WebTodo!</p>

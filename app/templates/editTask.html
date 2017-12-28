@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  {% if editStatus == 'create' %}
+    <h2>create new task</h2>
+  {% elif editStatus == 'edit' %}
+    <h2>edit task</h2>
+  {% endif %}
+
+  <form action="" method="POST" name="editTask">
+    {{ form.hidden_tag() }}
+    {{ form.title(size=32, placeholder="title") }}<br />
+    {% for error in form.title.errors %}
+      <span style="color: red;">[{{ error }}]</span><br />
+    {% endfor %}
+
+    {{ form.note(placeholder='enter your note (optional)') }}<br />
+    {{ form.submit() }}
+
+
+  </form>
+
+
+{% endblock %}

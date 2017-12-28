@@ -2,7 +2,10 @@
 import imp
 from migrate.versioning import api
 from app import db
-from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO
+from config import Config
+
+SQLALCHEMY_DATABASE_URI = Config.SQLALCHEMY_DATABASE_URI
+SQLALCHEMY_MIGRATE_REPO = Config.SQLALCHEMY_MIGRATE_REPO
 
 # current version
 version = api.db_version(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
