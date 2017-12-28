@@ -12,9 +12,16 @@
     <header>
       <nav>
         <a href="{{ url_for('index') }}">home</a>
-        <a href="{{ url_for('login') }}">login</a>
-        <a href="{{ url_for('signup') }}">sign up</a>
+        {% if current_user.is_active %}
+          <a href="{{ url_for('logout') }}">logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">login</a>
+          <a href="{{ url_for('signup') }}">sign up</a>
+        {% endif %}
       </nav>
+      {% if current_user.is_active %}
+        <p>Welcome, {{ current_user.username }}</p>
+      {% endif %}
     </header>
 
     <hr />

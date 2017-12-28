@@ -1,8 +1,21 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>Hello?</h1>
-  <i>Is it me you're looking for?</i>
+  <h1>WebTodo</h1>
+
+  {% if current_user.is_active %}
+    <h2>Your List</h2>
+    <ul>
+      <li>Item 0</li>
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+      <li>Item 4</li>
+    </ul>
+  {% else %}
+    <p>Welcome to WebTodo!</p>
+    <p>Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('signup') }}">sign up</a>.</p>
+  {% endif %}
 
 
 {% endblock %}
