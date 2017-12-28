@@ -18,7 +18,7 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    
+
     return render_template('index.html', title="home")
 
 @app.route('/protected')
@@ -61,3 +61,14 @@ def signup():
         else:
             form.username.errors.append("Username taken.")
     return render_template('signup.html', tile='sign up', form=form)
+
+
+#####     ERRORS     #####
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html', title='page not found'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html', title="that's not right"), 500

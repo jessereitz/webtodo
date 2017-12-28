@@ -25,3 +25,9 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/jessereitz'
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+
+class Test_Config(object):
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    TESTING = True
+    WTF_CSRF_ENABLED = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/WebTodoTestDB'
