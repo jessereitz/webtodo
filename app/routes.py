@@ -30,7 +30,7 @@ def create_task():
     if form.validate_on_submit():
         task_title = form.title.data
         task_note = form.note.data
-        task = Task(title=task_title, note=task_note, user_id=current_user.id)
+        task = Task(title=task_title, note=task_note, user_id=current_user.id, complete=False)
         db.session.add(task)
         try:
             db.session.commit()

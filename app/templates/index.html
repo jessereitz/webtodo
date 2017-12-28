@@ -11,6 +11,11 @@
         <li class="task">
           <div class="taskHeader">
             <h3>{{ task.title }}</h3>
+            {% if task.complete %}
+              <i>completed</i>
+            {% else %}
+              <i>not completed</i>
+            {% endif %}
             <a href="#">Mark Complete</a>
             <a href="#">Edit</a>
             <a href="#">Delete</a>
@@ -20,34 +25,9 @@
           {% endif %}
         </li>
       {% endfor %}
-
     </ul>
-
     {% endif %}
-    <ul>
-      <li class="task">
-          <div class="taskHeader">
-            <h3>Item 0</h3>
-            <i>not complete</i>
-            <a href="#">Mark Complete</a>
-            <a href="#">Edit</a>
-            <a href="#">Delete</a>
-          </div>
-          <p>This is the note</p>
-      </li>
-
-      <li class="task">
-          <div class="taskHeader">
-            <h3>Item 0</h3>
-            <i>complete</i>
-            <a href="#">Mark Incomplete</a>
-            <a href="#">Edit</a>
-            <a href="#">Delete</a>
-          </div>
-          <p>This is the note</p>
-      </li>
-
-    </ul>
+    
   {% else %}
     <p>Welcome to WebTodo!</p>
     <p>Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('signup') }}">sign up</a>.</p>
