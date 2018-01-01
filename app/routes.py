@@ -81,7 +81,16 @@ def mark_task(task_id):
 
 @app.route('/deleteTask/<task_id>')
 def delete_task(task_id):
-    pass
+    task = Task.query.filter_by(id=task_id).first()
+    if not task:
+        flash('Task not found.')
+        return redirect(url_for('index'))
+
+    db.session.delete(task)
+    db.session.commit()
+    flash("Task successfully deleted.")
+    return redirect(url_for('index'))
+
 
 #####     end Task MGMT     #####
 
