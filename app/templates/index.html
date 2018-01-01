@@ -16,8 +16,8 @@
             {% else %}
               <i>not completed</i>
             {% endif %}
-            <a href="#">Mark Complete</a>
-            <a href="#">Edit</a>
+            <a href="{{ url_for('mark_task', task_id=task.id) }}">Mark {% if task.complete %} {{ 'in' }}{% endif %}complete</a>
+            <a href="{{ url_for('edit_task', task_id=task.id) }}">Edit</a>
             <a href="#">Delete</a>
           </div>
           {% if task.note != None %}
@@ -27,7 +27,7 @@
       {% endfor %}
     </ul>
     {% endif %}
-    
+
   {% else %}
     <p>Welcome to WebTodo!</p>
     <p>Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('signup') }}">sign up</a>.</p>

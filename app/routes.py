@@ -18,7 +18,7 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    tasks = Task.query.filter_by(user_id=current_user.id)
+    tasks = Task.query.filter_by(user_id=current_user.id).order_by(Task.complete.asc())
     return render_template('index.html', title="home", tasks=tasks)
 
 
@@ -46,7 +46,44 @@ def create_task():
                             title="create task",
                             editStatus='create')
 
-#####     end Taks MGMT     #####
+@app.route('/editTask/<task_id>', methods=['GET', 'POST'])
+def edit_task(task_id):
+    task = Task.query.filter_by(id=task_id).first()
+    form = EditTaskForm(obj=task)
+
+    # on POST, validate form and update task
+    if form.validate_on_submit():
+        task.title = form.title.data
+        task.note = form.note.data
+        db.session.add(task)
+        db.session.commit()
+        flash("Task successfully updated.")
+        return redirect(url_for('index'))
+
+    return render_template('editTask.html',
+                            form=form,
+                            title="edit task",
+                            editStatus='edit')
+
+@app.route('/markTask/<task_id>')
+def mark_task(task_id):
+    task = Task.query.filter_by(id=task_id).first()
+    if task.complete:
+        task.complete = False
+        is_completed = 'completed'
+    else:
+        task.complete = True
+        is_completed = 'not completed'
+    db.session.add(task)
+    db.session.commit()
+    flash("Task successfully marked as " + is_completed)
+    return redirect(url_for('index'))
+
+@app.route('/deleteTask/<task_id>')
+def delete_task(task_id):
+    pass
+
+#####     end Task MGMT     #####
 
 
 #####     User MGMT     ######
