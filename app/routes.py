@@ -49,6 +49,9 @@ def create_task():
 @app.route('/editTask/<task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
     task = Task.query.filter_by(id=task_id).first()
+    if not task:
+        flash('Task not found.')
+        return redirect(url_for('index'))
     form = EditTaskForm(obj=task)
 
     # on POST, validate form and update task
@@ -68,6 +71,9 @@ def edit_task(task_id):
 @app.route('/markTask/<task_id>')
 def mark_task(task_id):
     task = Task.query.filter_by(id=task_id).first()
+    if not task:
+        flash('Task not found. Unable to mark task.')
+        return redirect(url_for('index'))
     if task.complete:
         task.complete = False
         is_completed = 'completed'
@@ -83,7 +89,7 @@ def mark_task(task_id):
 def delete_task(task_id):
     task = Task.query.filter_by(id=task_id).first()
     if not task:
-        flash('Task not found.')
+        flash('Task not found. Unable to delete.')
         return redirect(url_for('index'))
 
     db.session.delete(task)
