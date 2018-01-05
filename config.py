@@ -17,6 +17,8 @@ class Config(object):
     basedir = os.path.abspath(os.path.dirname(__file__))
     SECRET_KEY = os.environ.get('SECRET_KEY') or "no guessing"
     DEBUG = os.environ.get('DEBUG')
+    print('\n\n\n')
+    print(DEBUG)
 
     #####     WTF (forms)     #####
     WTF_CSRF_ENABLED = True
