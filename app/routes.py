@@ -4,7 +4,7 @@
 
 from flask import render_template, flash, redirect, url_for, session, request, g, abort
 from flask_login import login_user, logout_user, current_user, login_required
-from app import app, db, loginManager
+from app import app, db, loginManager, bcryption
 from app.forms import LoginForm, SignupForm, EditTaskForm, EditUsernameForm, EditPasswordForm, DeleteAccountForm
 from app.models import User, Task
 
@@ -116,7 +116,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
-            if user.password == form.password.data:
+            if bcryption.check_password_hash(user.password, form.password.data):
                 login_user(user)
                 flash('Logged in successfully!')
                 return redirect(url_for('index'))
@@ -157,8 +157,8 @@ def edit_password():
     form = EditPasswordForm()
 
     if form.validate_on_submit():
-        if current_user.password == form.current_password.data:
-            current_user.password = form.new_password.data
+        if bcryption.check_password_hash(current_user.password, form.current_password.data):
+            current_user.password = bcryption.generate_password_hash(form.new_password.data).decode('utf-8')
             db.session.add(current_user)
             db.session.commit()
             flash('Password successfully updated')
@@ -183,9 +183,9 @@ def delete_account():
     form = DeleteAccountForm()
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data
+        pw_candidate = form.password.data
         db_user = User.query.filter_by(username=username).first()
-        if db_user == current_user and password == db_user.password:
+        if db_user == current_user and bcryption.check_password_hash(db_user.password, pw_candidate):
             delete_all_user_tasks(username=username)
             logout_user()
             db.session.delete(db_user)
@@ -199,11 +199,16 @@ def delete_account():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    print('HELLO????')
     form = SignupForm()
     # on POST, validate form and sign user up
+    print('\n\n\n')
     if form.validate_on_submit():
         if username_available(form.username.data):
-            newUser = User(username=form.username.data, password=form.password.data)
+            pw_hash = bcryption.generate_password_hash(form.password.data).decode('utf-8')
+            print('\n\n\n')
+            print(pw_hash)
+            newUser = User(username=form.username.data, password=pw_hash)
             db.session.add(newUser)
             db.session.commit()
             flash("New user " + newUser.username + " successfully created!")

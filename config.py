@@ -20,6 +20,8 @@ class Config(object):
     #####     WTF (forms)     #####
     WTF_CSRF_ENABLED = True
 
+    #####     BCRYPT (password encryption)     #####
+    # BCRYPT_HANDLE_LONG_PASSWORDS = True
 
     #####     DATABASE     #####
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -14,8 +14,8 @@ class User(db.Model):
 
     # Database Schema
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    password = db.Column(db.String(64))
+    username = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    password = db.Column(db.String(500), nullable=False)
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
 
     # flask-login properties
