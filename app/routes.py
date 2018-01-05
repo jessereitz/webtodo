@@ -199,15 +199,11 @@ def delete_account():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    print('HELLO????')
     form = SignupForm()
     # on POST, validate form and sign user up
-    print('\n\n\n')
     if form.validate_on_submit():
         if username_available(form.username.data):
             pw_hash = bcryption.generate_password_hash(form.password.data).decode('utf-8')
-            print('\n\n\n')
-            print(pw_hash)
             newUser = User(username=form.username.data, password=pw_hash)
             db.session.add(newUser)
             db.session.commit()
