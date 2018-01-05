@@ -23,8 +23,14 @@ class SignupForm(FlaskForm):
     confirm_password = PasswordField('confirm password', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
 
-class UsernameForm(FlaskForm):
+class EditUsernameForm(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class EditPasswordForm(FlaskForm):
+    current_password = PasswordField('current password', validators=[DataRequired()])
+    new_password = PasswordField('new password', validators=[DataRequired(), EqualTo('confirm_new_password', message='New passwords must match')])
+    confirm_new_password = PasswordField('confirm new password', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 #####     TASK FORMS     #####

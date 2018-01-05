@@ -5,7 +5,7 @@
 from flask import render_template, flash, redirect, url_for, session, request, g, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, loginManager
-from app.forms import LoginForm, SignupForm, EditTaskForm, UsernameForm
+from app.forms import LoginForm, SignupForm, EditTaskForm, EditUsernameForm, EditPasswordForm
 from app.models import User, Task
 
 @app.before_request
@@ -137,7 +137,7 @@ def account():
 @app.route('/editUsername', methods=['GET', 'POST'])
 @login_required
 def edit_username():
-    form = UsernameForm()
+    form = EditUsernameForm()
 
     if form.validate_on_submit():
         if username_available(form.username.data):
@@ -147,9 +147,29 @@ def edit_username():
             flash('Username successfully updated')
             return redirect(url_for('account'))
         else:
+            form.username.data = None
             flash('Username unavailable.')
     return render_template('edit_username.html', form=form)
-    
+
+@app.route('/editPassword', methods=['GET', 'POST'])
+@login_required
+def edit_password():
+    form = EditPasswordForm()
+
+    if form.validate_on_submit():
+        if current_user.password == form.current_password.data:
+            current_user.password = form.new_password.data
+            db.session.add(current_user)
+            db.session.commit()
+            flash('Password successfully updated')
+            return redirect(url_for('account'))
+        else:
+            form.current_password.errors.append("Invalid password.")
+            flash('Unable to update password.')
+    else:
+        if request.method == 'POST':
+            flash("Unable to update password.")
+    return render_template('edit_password.html', form=form)
 
 
 @app.route('/logout')
