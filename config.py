@@ -25,7 +25,8 @@ class Config(object):
 
     #####     DATABASE     #####
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/jessereitz'
+    # SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/jessereitz'
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 class Test_Config(object):
