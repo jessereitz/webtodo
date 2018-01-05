@@ -156,10 +156,13 @@ def edit_password():
     form = EditPasswordForm()
 
     if form.validate_on_submit():
-        if bcryption.check_password_hash(current_user.password, form.current_password.data):
-            current_user.password = bcryption.generate_password_hash(form.new_password.data).decode('utf-8')
-            db.session.add(current_user)
-            db.session.commit()
+        if g.user.edit_password(form.current_password.data, form.new_password.data):
+            try:
+                db.session.add(g.user)
+                db.session.commit()
+            except Exception:
+                app.logger.info('Delete task failed.')
+                abort(500)
             flash('Password successfully updated')
             return redirect(url_for('account'))
         else:

@@ -18,11 +18,15 @@ class User(db.Model):
     password = db.Column(db.String(500), nullable=False)
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
 
-    def validate_login(self, username):
-        pass
-
     def validate_password(self, candidate):
         return bcryption.check_password_hash(self.password, candidate)
+
+    def edit_password(self, current_password, new_password):
+        if bcryption.check_password_hash(self.password, current_password):
+            self.password = bcryption.generate_password_hash(new_password).decode('utf-8')
+            return True
+        else:
+            return False
 
     # flask-login properties
     @property
