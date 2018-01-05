@@ -5,7 +5,7 @@
 from flask import render_template, flash, redirect, url_for, session, request, g, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, loginManager
-from app.forms import LoginForm, SignupForm, EditTaskForm, EditUsernameForm, EditPasswordForm
+from app.forms import LoginForm, SignupForm, EditTaskForm, EditUsernameForm, EditPasswordForm, DeleteAccountForm
 from app.models import User, Task
 
 @app.before_request
@@ -177,6 +177,26 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/deleteAccount', methods=['GET', 'POST'])
+@login_required
+def delete_account():
+    form = DeleteAccountForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        db_user = User.query.filter_by(username=username).first()
+        if db_user == current_user and password == db_user.password:
+            delete_all_user_tasks(username=username)
+            logout_user()
+            db.session.delete(db_user)
+            db.session.commit()
+            flash('Your account has been deleted.')
+            return redirect(url_for('index'))
+        else:
+            flash('Unsuccessful.')
+    return render_template('delete_account.html', form=form)
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
@@ -214,3 +234,12 @@ def username_available(username):
         return True
     else:
         return False
+
+def delete_all_user_tasks(username):
+    if not username:
+        return False
+
+    tasks = g.user.tasks.filter_by(user_id=current_user.id).all()
+    for task in tasks:
+        db.session.delete(task)
+    db.session.commit()

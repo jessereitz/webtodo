@@ -1,27 +1,32 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>WebTodo</h1>
-
   {% if current_user.is_active %}
-    <h2>Your List</h2>
+    <h2 class="center">Your List</h2>
     {% if tasks|length > 0 %}
-    <ul>
+    <ul class="todoList">
       {% for task in tasks %}
-        <li class="task">
+        {% if task.complete %}
+        {% set completed = 'completed' %}
+        {% else %}
+        {% set completed = 'incomplete' %}
+        {% endif %}
+        <li class="task {{ completed }}">
           <div class="taskHeader">
-            <h3>{{ task.title }}</h3>
+            <h3>{{ task.title }}</h3> |
             {% if task.complete %}
               <i>completed</i>
             {% else %}
               <i>not completed</i>
             {% endif %}
-            <a href="{{ url_for('mark_task', task_id=task.id) }}">Mark {% if task.complete %} {{ 'in' }}{% endif %}complete</a>
-            <a href="{{ url_for('edit_task', task_id=task.id) }}">Edit</a>
-            <a href="{{ url_for('delete_task', task_id=task.id) }}">Delete</a>
+            <div class="taskNav">
+              <a href="{{ url_for('mark_task', task_id=task.id) }}">Mark {% if task.complete %} {{ 'in' }}{% endif %}complete</a>
+              <a href="{{ url_for('edit_task', task_id=task.id) }}">Edit</a>
+              <a href="{{ url_for('delete_task', task_id=task.id) }}">Delete</a>
+            </div>
           </div>
-          {% if task.note != None %}
-            <p>{{ task.note }}</p>
+          {% if task.note|length > 0 %}
+            <p class="taskNote">"{{ task.note }}"</p>
           {% endif %}
         </li>
       {% endfor %}

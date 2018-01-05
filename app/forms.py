@@ -33,6 +33,12 @@ class EditPasswordForm(FlaskForm):
     confirm_new_password = PasswordField('confirm new password', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class DeleteAccountForm(FlaskForm):
+    username = StringField('username', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired(), EqualTo('confirm_password', message="Passwords must match")])
+    confirm_password = PasswordField('confirm password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 #####     TASK FORMS     #####
 class EditTaskForm(FlaskForm):
     title = StringField('title', validators=[DataRequired()])

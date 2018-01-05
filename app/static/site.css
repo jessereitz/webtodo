@@ -1,3 +1,114 @@
-.task {
-  border: 1px solid black;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto');
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+}
+
+header {
+  box-sizing: border-box;
+  width: 100vw;
+  height: 70px;
+  position: relative;
+  border-bottom: 1px solid #333;
+  padding: 0 1em;
+  overflow: hidden;
+}
+
+header h1, header nav {
+  display: inline-block;
+}
+
+header nav {
+  position: absolute;
+  right: 0;
+  height: 70px;
+  margin-right: 0;
+}
+
+header nav a {
+  display: inline-block;
+  line-height: 70px;
+  padding: 0 0.5em;
+}
+
+header nav a:hover {
+  background: #ddd;
+}
+
+div.mainContainer {
+  text-align: center;
+}
+
+section.main {
+  display: inline-block;
+  text-align: left;
+  margin-top: 1em;
+}
+
+section.main a {
+  color: #1CA5B8;
+  font-style: italic;
+}
+
+ul.todoList {
+  padding: 0;
+  list-style: none;
+  border: 1px solid #eee;
+  box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1);
+}
+
+ul.todoList li {
+  padding: 0.25em 1em;
+  border-bottom: 1px solid #eee;
+}
+
+ul.todoList li:hover {
+  background: #eee;
+}
+
+ul.todoList li.completed {
+  background: #B8EDA9;
+}
+
+div.taskHeader h3 {
+  display: inline-block;
+}
+
+div.taskNav {
+  margin-bottom: 0.25em;
+}
+
+p.taskNote {
+  font-style: italic;
 }

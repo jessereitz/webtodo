@@ -11,6 +11,7 @@
   </head>
   <body>
     <header>
+      <a href="{{ url_for('index') }}"><h1>WebTodo</h1></a>
       <nav>
         <a href="{{ url_for('index') }}">home</a>
         {% if current_user.is_active %}
@@ -22,12 +23,9 @@
           <a href="{{ url_for('signup') }}">sign up</a>
         {% endif %}
       </nav>
-      {% if current_user.is_active %}
-        <p>Welcome, {{ current_user.username }}</p>
-      {% endif %}
+
     </header>
 
-    <hr />
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
@@ -37,7 +35,10 @@
         </ul>
       {% endif %}
     {% endwith %}
+    <div class="mainContainer">
+    <section class="main">
     {% block content %}{% endblock %}
-
+  </section>
+</div>
   </body>
 </html>
