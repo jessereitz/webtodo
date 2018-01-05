@@ -27,15 +27,15 @@ bcryption = Bcrypt(app)
 db = SQLAlchemy(app)
 
 # application logging
-if not app.debug:
-    import logging
-    from logging.handlers import RotatingFileHandler
-    file_handler = RotatingFileHandler('logs/webtodo.log', 1 * 1024 * 1024, 10)
-    file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
-    app.logger.setLevel(logging.INFO)
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.info('APP STARTUP')
+# if not app.debug:
+#     import logging
+#     from logging.handlers import RotatingFileHandler
+#     file_handler = RotatingFileHandler('logs/webtodo.log', 1 * 1024 * 1024, 10)
+#     file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+#     app.logger.setLevel(logging.INFO)
+#     file_handler.setLevel(logging.INFO)
+#     app.logger.addHandler(file_handler)
+#     app.logger.info('APP STARTUP')
 
 # flask-login
 loginManager = LoginManager()
