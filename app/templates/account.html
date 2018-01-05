@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h1>Your Account</h1>
+
+<table border=1 style="border-collapse: collapse;">
+  <tr>
+    <th>username</th>
+    <td>{{ current_user.username }}</td>
+    <td><a href="{{ url_for('edit_username') }}">edit</a></td>
+  </tr>
+  <tr>
+    <td colspan="3">change password</td>
+  </tr>
+  <tr>
+    <td colspan="3">delete account</td>
+  </tr>
+</table>
+
+
+{% endblock %}

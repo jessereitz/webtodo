@@ -5,7 +5,7 @@
 from flask import render_template, flash, redirect, url_for, session, request, g, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, loginManager
-from app.forms import LoginForm, SignupForm, EditTaskForm
+from app.forms import LoginForm, SignupForm, EditTaskForm, UsernameForm
 from app.models import User, Task
 
 @app.before_request
@@ -18,12 +18,16 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    tasks = Task.query.filter_by(user_id=current_user.id).order_by(Task.complete.asc())
+    if g.user.is_authenticated:
+        tasks = g.user.tasks.filter_by(user_id=current_user.id).order_by(Task.complete.asc()).all()
+    else:
+        tasks = None
     return render_template('index.html', title="home", tasks=tasks)
 
 
 #####     Task MGMT     ######
 @app.route('/createTask', methods=['GET', 'POST'])
+@login_required
 def create_task():
     form = EditTaskForm()
     # on POST, validate form and create task
@@ -47,8 +51,9 @@ def create_task():
                             editStatus='create')
 
 @app.route('/editTask/<task_id>', methods=['GET', 'POST'])
+@login_required
 def edit_task(task_id):
-    task = Task.query.filter_by(id=task_id).first()
+    task = current_user.tasks.filter_by(id=task_id).first()
     if not task:
         flash('Task not found.')
         return redirect(url_for('index'))
@@ -69,8 +74,9 @@ def edit_task(task_id):
                             editStatus='edit')
 
 @app.route('/markTask/<task_id>')
+@login_required
 def mark_task(task_id):
-    task = Task.query.filter_by(id=task_id).first()
+    task = current_user.tasks.filter_by(id=task_id).first()
     if not task:
         flash('Task not found. Unable to mark task.')
         return redirect(url_for('index'))
@@ -86,8 +92,9 @@ def mark_task(task_id):
     return redirect(url_for('index'))
 
 @app.route('/deleteTask/<task_id>')
+@login_required
 def delete_task(task_id):
-    task = Task.query.filter_by(id=task_id).first()
+    task = current_user.tasks.filter_by(id=task_id).first()
     if not task:
         flash('Task not found. Unable to delete.')
         return redirect(url_for('index'))
@@ -120,6 +127,31 @@ def login():
 
     return render_template('login.html', title='login', form=form)
 
+@app.route('/account')
+@login_required
+def account():
+    if g.user.is_authenticated:
+        return render_template('account.html')
+    return render_template('index.html', title="home", tasks=tasks)
+
+@app.route('/editUsername', methods=['GET', 'POST'])
+@login_required
+def edit_username():
+    form = UsernameForm()
+
+    if form.validate_on_submit():
+        if username_available(form.username.data):
+            current_user.username = form.username.data
+            db.session.add(current_user)
+            db.session.commit()
+            flash('Username successfully updated')
+            return redirect(url_for('account'))
+        else:
+            flash('Username unavailable.')
+    return render_template('edit_username.html', form=form)
+    
+
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -130,7 +162,7 @@ def signup():
     form = SignupForm()
     # on POST, validate form and sign user up
     if form.validate_on_submit():
-        if not User.query.filter_by(username=form.username.data).first():
+        if username_available(form.username.data):
             newUser = User(username=form.username.data, password=form.password.data)
             db.session.add(newUser)
             db.session.commit()
@@ -153,3 +185,12 @@ def internal_error(error):
     return render_template('500.html', title="that's not right"), 500
 
 #####     end ERRORS     #####
+
+#####     HELPERS     #####
+
+def username_available(username):
+    """ Returns True if username is available, False if not. """
+    if not User.query.filter_by(username=username).first():
+        return True
+    else:
+        return False

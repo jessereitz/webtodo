@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Edit Username:</h2>
+<p><b>Current Username:</b> {{ current_user.username }}</p>
+  <form action="{{ url_for('edit_username') }}" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.username(size=32, placeholder=current_user.username, autofocus="autofocus") }}<br />
+    {% for error in form.username.errors %}
+      <span style="color: red;">[{{ error }}]</span><br />
+    {% endfor %}
+    {{ form.submit() }}
+
+  </form>
+
+{% endblock %}

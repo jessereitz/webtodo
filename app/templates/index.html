@@ -5,7 +5,7 @@
 
   {% if current_user.is_active %}
     <h2>Your List</h2>
-    {% if tasks != None %}
+    {% if tasks|length > 0 %}
     <ul>
       {% for task in tasks %}
         <li class="task">
@@ -26,6 +26,9 @@
         </li>
       {% endfor %}
     </ul>
+    {% else %}
+    <p>You don't have any tasks in your list!
+      <a href="{{ url_for('create_task') }}">Create a task</a> to get started.</p>
     {% endif %}
 
   {% else %}
