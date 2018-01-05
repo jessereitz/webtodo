@@ -22,6 +22,7 @@ def index():
         tasks = g.user.tasks.filter_by(user_id=current_user.id).order_by(Task.complete.asc()).all()
     else:
         tasks = None
+    print('\n\n\n YO!')
     return render_template('index.html', title="home", tasks=tasks)
 
 
