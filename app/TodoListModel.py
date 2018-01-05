@@ -61,6 +61,13 @@ class TodoList():
         except Exception:
             raise Exception
 
-    def delete_task(self, task):
+    def delete_task(self, task_id):
         """ Deletes given task. """
-        pass
+        task = self.tasks.filter_by(id=task_id).first()
+        if not task:
+            return False
+        try:
+            self.db.session.delete(task)
+            self.db.session.commit()
+        except Exception:
+            raise Exception

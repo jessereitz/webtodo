@@ -91,14 +91,16 @@ def mark_task(task_id):
 @app.route('/deleteTask/<task_id>')
 @login_required
 def delete_task(task_id):
-    task = current_user.tasks.filter_by(id=task_id).first()
-    if not task:
-        flash('Task not found. Unable to delete.')
-        return redirect(url_for('index'))
-
-    db.session.delete(task)
-    db.session.commit()
-    flash("Task successfully deleted.")
+    try:
+        task_deleted = g.todolist.delete_task(task_id)
+    except Exception:
+        app.logger.info('Delete task failed.')
+        abort(500)
+    if task_deleted:
+        flash('Task successfully deleted')
+    else:
+        flash('Something went wrong. Ensure you are trying to delete a \
+                task that exists.')
     return redirect(url_for('index'))
 
 
