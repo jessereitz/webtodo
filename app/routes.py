@@ -7,10 +7,12 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, loginManager, bcryption
 from app.forms import LoginForm, SignupForm, EditTaskForm, EditUsernameForm, EditPasswordForm, DeleteAccountForm
 from app.models import User, Task
+from app.TodoListModel import TodoList
 
 @app.before_request
 def before_request():
     g.user = current_user
+    g.todolist = TodoList(db, g.user)
 
 @loginManager.user_loader
 def load_user(id):
@@ -19,10 +21,9 @@ def load_user(id):
 @app.route('/')
 def index():
     if g.user.is_authenticated:
-        tasks = g.user.tasks.filter_by(user_id=current_user.id).order_by(Task.complete.asc()).all()
+        tasks = g.todolist.get_all_tasks()
     else:
         tasks = None
-    print('\n\n\n YO!')
     return render_template('index.html', title="home", tasks=tasks)
 
 
@@ -30,22 +31,18 @@ def index():
 @app.route('/createTask', methods=['GET', 'POST'])
 @login_required
 def create_task():
+    """ On GET, display create task form. On POST, create task with given
+        info. """
     form = EditTaskForm()
     # on POST, validate form and create task
     if form.validate_on_submit():
-        task_title = form.title.data
-        task_note = form.note.data
-        task = Task(title=task_title, note=task_note, user_id=current_user.id, complete=False)
-        db.session.add(task)
         try:
-            db.session.commit()
-        except Exception as e:
-            app.logger.info('Creation of task failed.')
+            g.todolist.create_task(title=form.title.data, note=form.note.data)
+        except Exception:
+            app.logger.info('Task creation failed.')
             abort(500)
-
         flash("New task successfully created.")
         return redirect(url_for('index'))
-
     return render_template('editTask.html',
                             form=form,
                             title="create task",
@@ -54,18 +51,20 @@ def create_task():
 @app.route('/editTask/<task_id>', methods=['GET', 'POST'])
 @login_required
 def edit_task(task_id):
-    task = current_user.tasks.filter_by(id=task_id).first()
+    """ On GET, display edit task form with current task info. On POST,
+        updates specified task with new info. """
+    task = g.todolist.get_task(task_id)
     if not task:
         flash('Task not found.')
         return redirect(url_for('index'))
     form = EditTaskForm(obj=task)
-
     # on POST, validate form and update task
     if form.validate_on_submit():
-        task.title = form.title.data
-        task.note = form.note.data
-        db.session.add(task)
-        db.session.commit()
+        try:
+            g.todolist.update_task(task, form.title.data, form.note.data)
+        except Exception:
+            app.logger.info('Task update failed.')
+            abort(500)
         flash("Task successfully updated.")
         return redirect(url_for('index'))
 
@@ -77,19 +76,16 @@ def edit_task(task_id):
 @app.route('/markTask/<task_id>')
 @login_required
 def mark_task(task_id):
-    task = current_user.tasks.filter_by(id=task_id).first()
-    if not task:
-        flash('Task not found. Unable to mark task.')
-        return redirect(url_for('index'))
-    if task.complete:
-        task.complete = False
-        is_completed = 'completed'
+    try:
+        task_marked = g.todolist.mark_task(task_id)
+    except Exception:
+        app.logger.info('Mark task failed.')
+        abort(500)
+    if not task_marked:
+        flash('Something went wrong. Ensure you are trying to mark a \
+                task that exists.')
     else:
-        task.complete = True
-        is_completed = 'not completed'
-    db.session.add(task)
-    db.session.commit()
-    flash("Task successfully marked as " + is_completed)
+        flash("Task successfully marked as " + task_marked)
     return redirect(url_for('index'))
 
 @app.route('/deleteTask/<task_id>')
