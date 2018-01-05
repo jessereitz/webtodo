@@ -26,9 +26,6 @@ app.config.from_object(Config)
 bcryption = Bcrypt(app)
 db = SQLAlchemy(app)
 
-print('\n\n\n\n')
-print(app.debug)
-
 # application logging
 if not app.debug:
     import logging

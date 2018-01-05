@@ -16,9 +16,7 @@ class Config(object):
     #####     FLASK CONFIGURATION     #####
     basedir = os.path.abspath(os.path.dirname(__file__))
     SECRET_KEY = os.environ.get('SECRET_KEY') or "no guessing"
-    DEBUG = os.environ.get('DEBUG')
-    print('\n\n\n')
-    print(DEBUG)
+    DEBUG = os.environ.get('DEBUG') or False
 
     #####     WTF (forms)     #####
     WTF_CSRF_ENABLED = True
