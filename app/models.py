@@ -7,7 +7,7 @@
 #######################################
 
 #####     IMPORTS     #####
-from app import db
+from app import db, bcryption
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -17,6 +17,12 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     password = db.Column(db.String(500), nullable=False)
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
+
+    def validate_login(self, username):
+        pass
+
+    def validate_password(self, candidate):
+        return bcryption.check_password_hash(self.password, candidate)
 
     # flask-login properties
     @property

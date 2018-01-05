@@ -12,7 +12,8 @@ from app.TodoListModel import TodoList
 @app.before_request
 def before_request():
     g.user = current_user
-    g.todolist = TodoList(db, g.user)
+    if g.user.is_authenticated:
+        g.todolist = TodoList(db, g.user)
 
 @loginManager.user_loader
 def load_user(id):
@@ -115,7 +116,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
-            if bcryption.check_password_hash(user.password, form.password.data):
+            if user.validate_password(form.password.data):
                 login_user(user)
                 flash('Logged in successfully!')
                 return redirect(url_for('index'))
@@ -123,7 +124,6 @@ def login():
                 form.password.errors.append("Incorrect password.")
         else:
             flash("User not found.")
-
     return render_template('login.html', title='login', form=form)
 
 @app.route('/account')
