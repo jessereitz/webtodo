@@ -12,7 +12,7 @@ from app.TodoListModel import TodoList
 @app.before_request
 def before_request():
     g.user = current_user
-    if g.user.is_authenticated:
+    if not g.user.is_anonymous:
         g.todolist = TodoList(db, g.user)
 
 @loginManager.user_loader
