@@ -4,7 +4,10 @@
   {% if current_user.is_active %}
     <h2 class="center">Your List</h2>
     {% if tasks|length > 0 %}
-    <ul class="todoList">
+    <a href="#" id="displayAllItems">Display All</a> |
+    <a href="#" id="displayCompleteItems">Display Completed Items</a> | 
+    <a href="#" id="displayIncompleteItems">Display incomplete Items</a>
+    <ul id="todoList" class="todoList">
       {% for task in tasks %}
         {% if task.complete %}
         {% set completed = 'completed' %}
@@ -41,5 +44,5 @@
     <p>Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('signup') }}">sign up</a>.</p>
   {% endif %}
 
-
+<script type="text/javascript" src="{{ url_for('static', filename='site.js') }}"></script>
 {% endblock %}
