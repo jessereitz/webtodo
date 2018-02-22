@@ -22,3 +22,6 @@ in order to get the app to work.
 
 A live demo of WebTodo is hosted on Heroku. Poke around the code here and then
 [check it out](https://jreitz-webtodo.herokuapp.com/) over there!
+
+*It may take a few moments for the app to load on Heroku. This is due to it
+being hosted on the free tier. Please be patient!*
